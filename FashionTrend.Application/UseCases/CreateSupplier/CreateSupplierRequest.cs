@@ -3,5 +3,7 @@
 public sealed record CreateSupplierRequest(
     string Email,
     string Name,
-    string Password
+    string Password,
+    List<Material> Materials,
+    List<SewingMachine> SewingMachines
     ) : IRequest<CreateSupplierResponse>;

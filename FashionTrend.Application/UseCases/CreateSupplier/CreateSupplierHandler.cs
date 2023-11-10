@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using MediatR;
 
-public class CreateUserHandler : IRequestHandler<CreateSupplierRequest, CreateSupplierResponse>
+public class CreateSupplierHandler : IRequestHandler<CreateSupplierRequest, CreateSupplierResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ISupplierRepository _userRepository;
+    private readonly ISupplierRepository _supplierRepository;
     private readonly IMapper _mapper;
 
-    public CreateUserHandler(IUnitOfWork unitOfWork, ISupplierRepository userRepository,
+    public CreateSupplierHandler(IUnitOfWork unitOfWork, ISupplierRepository supplierRepository,
         IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _userRepository = userRepository;
+        _supplierRepository = supplierRepository;
         _mapper = mapper;
     }
 
@@ -19,7 +19,7 @@ public class CreateUserHandler : IRequestHandler<CreateSupplierRequest, CreateSu
     {
         var supplier = _mapper.Map<Supplier>(request);
 
-        _userRepository.Create(supplier);
+        _supplierRepository.Create(supplier);
 
         await _unitOfWork.Commit(cancellationToken);
         return _mapper.Map<CreateSupplierResponse>(supplier);

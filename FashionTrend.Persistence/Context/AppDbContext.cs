@@ -8,5 +8,11 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Supplier> Suppliers { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Supplier>().Ignore(supplier => supplier.Materials);
+        modelBuilder.Entity<Supplier>().Ignore(supplier => supplier.SewingMachines);
+    }
 }
  

@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Service> Services { get; set; }
+    public DbSet<Product> Products { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,6 +18,8 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Service>().Ignore(service => service.Materials);
         modelBuilder.Entity<Service>().Ignore(service => service.SewingMachines);
+
+        modelBuilder.Entity<Product>().Ignore(product => product.Materials);
     }
 }
  

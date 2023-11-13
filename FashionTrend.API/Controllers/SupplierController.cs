@@ -38,4 +38,17 @@ public class SupplierController : ControllerBase
         return Ok(response);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(Guid? id, CancellationToken cancellationToken)
+    {
+        if (id is null)
+        {
+            return BadRequest();
+        }
+
+        var deleteRequest = new DeleteSupplierRequest(id.Value);
+        var response = await _mediator.Send(deleteRequest, cancellationToken);
+        return Ok(response);
+    }
+
 }

@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 
-public sealed class CreateSupplierValidator : AbstractValidator<CreateSupplierRequest>
+
+public class UpdateSupplierValidator : AbstractValidator<UpdateSupplierRequest>
 {
-    public CreateSupplierValidator()
+    public UpdateSupplierValidator()
     {
         RuleFor(x => x.Email).NotEmpty().MaximumLength(50).EmailAddress();
         RuleFor(x => x.Name).NotEmpty().MinimumLength(3).MaximumLength(50);

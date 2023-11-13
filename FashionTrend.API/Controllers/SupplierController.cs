@@ -31,4 +31,11 @@ public class SupplierController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet]
+    public async Task<ActionResult<List<GetAllSupplierResponse>>> GetAll(CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetAllSupplierRequest(), cancellationToken);
+        return Ok(response);
+    }
+
 }

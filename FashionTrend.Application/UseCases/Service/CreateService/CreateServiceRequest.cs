@@ -6,5 +6,6 @@ public sealed record CreateServiceRequest(
     Guid ProductId,
     List<SewingMachine> SewingMachines,
     int Quantity,
-    double UnitPrice
+    double UnitPrice,
+    int ServiceDays
     ) : IRequest<CreateServiceResponse>;

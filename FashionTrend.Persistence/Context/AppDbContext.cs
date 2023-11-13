@@ -16,7 +16,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Supplier>().Ignore(supplier => supplier.Materials);
         modelBuilder.Entity<Supplier>().Ignore(supplier => supplier.SewingMachines);
 
-        modelBuilder.Entity<Service>().Ignore(service => service.Materials);
         modelBuilder.Entity<Service>().Ignore(service => service.SewingMachines);
 
         modelBuilder.Entity<Product>().Ignore(product => product.Materials);

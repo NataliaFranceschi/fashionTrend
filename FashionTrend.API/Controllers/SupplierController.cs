@@ -18,4 +18,17 @@ public class SupplierController : ControllerBase
         var supplier = await _mediator.Send(request);
         return Ok(supplier);
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UpdateSupplierResponse>>
+        Update(Guid id, UpdateSupplierRequest request, CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
+        {
+            return BadRequest();
+        }
+        var response = await _mediator.Send(request, cancellationToken);
+        return Ok(response);
+    }
+
 }

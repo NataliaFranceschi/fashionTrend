@@ -8,5 +8,5 @@
     public double UnitPrice { get; set; }
     public double TotalPrice { get; set; }
     public bool Available { get; set; } 
-
+    public int ServiceDays { get; set; }
 }

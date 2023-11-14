@@ -3,5 +3,5 @@
 public sealed record CreateProductRequest(
     string Name,
     string Description,
-    List<Material> Materials
+    Material Material
     ) : IRequest<CreateProductResponse>;

@@ -3,5 +3,6 @@
 public sealed record CreateProductRequest(
     string Name,
     string Description,
-    List<Material> Materials
+    string Material,
+    ClothingType ClothingType
     ) : IRequest<CreateProductResponse>;

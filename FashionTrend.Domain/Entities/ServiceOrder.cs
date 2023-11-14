@@ -17,20 +17,5 @@ public sealed class ServiceOrder : BaseEntity
         var now = DateTime.Now;
         EstimatedDate = now.AddDays(Service.ServiceDays);
 
-        bool haveSewingMachine = Service.SewingMachines
-            .All(item => Supplier.SewingMachines.Contains(item));
-        bool usesMaterial = Service.Product.Materials
-            .All(item => Supplier.Materials.Contains(item));
-
-        if (haveSewingMachine && usesMaterial)
-        {
-            Status = RequestStatus.Pending;
-            Service.Available = false;
-        }
-        else
-        {
-            Status = RequestStatus.Rejected;
-        }
-
     }
 }

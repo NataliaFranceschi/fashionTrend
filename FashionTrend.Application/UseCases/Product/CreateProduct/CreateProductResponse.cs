@@ -2,6 +2,7 @@
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public Material Material { get; set; }
+    public string Material { get; set; }
+    public ClothingType ClothingType { get; set; }
 
 }

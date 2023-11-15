@@ -20,13 +20,13 @@ public sealed class DeleteSupplierHandler : IRequestHandler<DeleteSupplierReques
                                                  CancellationToken cancellationToken)
     {
 
-        var user = await _supplierRepository.Get(request.Id, cancellationToken);
+        var supplier = await _supplierRepository.Get(request.Id, cancellationToken);
 
-        if (user == null) return default;
+        if (supplier == null) return default;
 
-        _supplierRepository.Delete(user);
+        _supplierRepository.Delete(supplier);
         await _unitOfWork.Commit(cancellationToken);
 
-        return _mapper.Map<DeleteSupplierResponse>(user);
+        return _mapper.Map<DeleteSupplierResponse>(supplier);
     }
 }

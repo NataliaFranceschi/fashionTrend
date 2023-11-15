@@ -1,8 +1,9 @@
 ﻿using MediatR;
 
-public sealed record CreateProductRequest(
+public sealed record UpdateProductRequest(
+    Guid Id,
     string Name,
     string Description,
     ClothingType ClothingType,
     List<Material> Materials
-    ) : IRequest<CreateProductResponse>;
+    ) : IRequest<UpdateProductResponse>;

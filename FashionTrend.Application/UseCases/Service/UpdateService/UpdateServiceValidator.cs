@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 
-public sealed class CreateServiceValidator : AbstractValidator<CreateServiceRequest>
+
+public class UpdateServiceValidator : AbstractValidator<UpdateServiceRequest>
 {
-    public CreateServiceValidator()
+    public UpdateServiceValidator()
     {
         RuleFor(x => x.Type).NotEmpty();
         RuleFor(x => x.ProductId).NotEmpty();

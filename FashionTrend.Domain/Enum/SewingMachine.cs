@@ -1,6 +1,6 @@
 ﻿public enum SewingMachine
 {
-    Overloque,
+    Overloque = 1,
     Galoneira,
     PontoCadeia,
     Travete,

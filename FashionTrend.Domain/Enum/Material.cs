@@ -1,6 +1,6 @@
 ﻿public enum Material
 {
-    Denim,
+    Denim = 1,
     Seda,
     Couro,
     Lycra,

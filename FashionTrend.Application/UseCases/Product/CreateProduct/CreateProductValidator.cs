@@ -4,7 +4,7 @@ public sealed class CreateProductValidator : AbstractValidator<CreateProductRequ
 {
     public CreateProductValidator()
     {
-        RuleFor(x => x.Description);
-
+        RuleFor(x => x.Name).NotEmpty().MinimumLength(3);
+        RuleFor(x => x.ClothingType).NotEmpty();
     }
 }

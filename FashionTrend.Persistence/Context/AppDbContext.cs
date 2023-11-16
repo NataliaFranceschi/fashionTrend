@@ -14,12 +14,41 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Supplier>().Ignore(supplier => supplier.Materials);
-        modelBuilder.Entity<Supplier>().Ignore(supplier => supplier.SewingMachines);
+        modelBuilder.Entity<Product>()
+            .Property(e => e.Materials)
+            .HasConversion(
+                v => string.Join(",", v.Select(s => s.ToString())),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                      .Select(s => (Material)Enum.Parse(typeof(Material), s))
+                      .ToList());
 
-        modelBuilder.Entity<Service>().Ignore(service => service.SewingMachines);
+        modelBuilder.Entity<Service>()
+           .Property(e => e.SewingMachines)
+           .HasConversion(
+               v => string.Join(",", v.Select(s => s.ToString())),
+               v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                     .Select(s => (SewingMachine)Enum.Parse(typeof(SewingMachine), s))
+                     .ToList());
 
-        modelBuilder.Entity<Product>().Ignore(product => product.Materials);
+        modelBuilder.Entity<Supplier>()
+            .Property(e => e.Materials)
+            .HasConversion(
+                v => string.Join(",", v.Select(s => s.ToString())),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                      .Select(s => (Material)Enum.Parse(typeof(Material), s))
+                      .ToList());
+
+        modelBuilder.Entity<Supplier>()
+           .Property(e => e.SewingMachines)
+           .HasConversion(
+               v => string.Join(",", v.Select(s => s.ToString())),
+               v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                     .Select(s => (SewingMachine)Enum.Parse(typeof(SewingMachine), s))
+                     .ToList());
+
+
+
+        base.OnModelCreating(modelBuilder);
     }
 }
  

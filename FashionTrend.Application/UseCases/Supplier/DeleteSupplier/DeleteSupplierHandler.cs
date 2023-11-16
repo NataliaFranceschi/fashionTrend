@@ -2,13 +2,13 @@
 using MediatR;
 
 
-public sealed class DeleteUserHandler : IRequestHandler<DeleteSupplierRequest, DeleteSupplierResponse>
+public sealed class DeleteSupplierHandler : IRequestHandler<DeleteSupplierRequest, DeleteSupplierResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISupplierRepository _supplierRepository;
     private readonly IMapper _mapper;
 
-    public DeleteUserHandler(IUnitOfWork unitOfWork,
+    public DeleteSupplierHandler(IUnitOfWork unitOfWork,
                              ISupplierRepository supplierRepository, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
@@ -20,13 +20,13 @@ public sealed class DeleteUserHandler : IRequestHandler<DeleteSupplierRequest, D
                                                  CancellationToken cancellationToken)
     {
 
-        var user = await _supplierRepository.Get(request.Id, cancellationToken);
+        var supplier = await _supplierRepository.Get(request.Id, cancellationToken);
 
-        if (user == null) return default;
+        if (supplier == null) return default;
 
-        _supplierRepository.Delete(user);
+        _supplierRepository.Delete(supplier);
         await _unitOfWork.Commit(cancellationToken);
 
-        return _mapper.Map<DeleteSupplierResponse>(user);
+        return _mapper.Map<DeleteSupplierResponse>(supplier);
     }
 }

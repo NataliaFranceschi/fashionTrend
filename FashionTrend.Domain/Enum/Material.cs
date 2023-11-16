@@ -1,7 +1,11 @@
 ﻿public enum Material
 {
-    Jeans,
-    Silk,
-    Leather,
-    Lycra
+    Denim,
+    Seda,
+    Couro,
+    Lycra,
+    Viscose,
+    Algodao, 
+    Linho,
+    Outros
 }

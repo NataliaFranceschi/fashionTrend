@@ -19,14 +19,6 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
-
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateSupplierRequest request)
-    {
-        var supplier = await _mediator.Send(request);
-        return Ok(supplier);
-    }
-
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateProductResponse>>
         Update(Guid id, UpdateProductRequest request, CancellationToken cancellationToken)

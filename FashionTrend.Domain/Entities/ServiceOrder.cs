@@ -6,31 +6,8 @@ public sealed class ServiceOrder : BaseEntity
     public Guid SupplierId { get; set; }
     public Service Service { get; set; }
     public Guid ServiceId { get; set; }
-    public DateTime EstimatedDate { get; set; }
-    public RequestStatus Status { get; set; }
-    public bool Payed { get; set; }
+    public DateTime EstimatedDate { get; set; } = DateTime.Now;
+    public RequestStatus Status { get; set; } = RequestStatus.Pending;
+    public bool Payed { get; set; } = false;
 
-    public ServiceOrder()
-    {
-        Payed = false;
-
-        var now = DateTime.Now;
-        EstimatedDate = now.AddDays(Service.ServiceDays);
-
-        bool haveSewingMachine = Service.SewingMachines
-            .All(item => Supplier.SewingMachines.Contains(item));
-        bool usesMaterial = Service.Product.Materials
-            .All(item => Supplier.Materials.Contains(item));
-
-        if (haveSewingMachine && usesMaterial)
-        {
-            Status = RequestStatus.Pending;
-            Service.Available = false;
-        }
-        else
-        {
-            Status = RequestStatus.Rejected;
-        }
-
-    }
 }

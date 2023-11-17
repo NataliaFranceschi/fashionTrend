@@ -2,5 +2,7 @@
 
 public sealed record CreateServiceOrderRequest(
     Guid SupplierId,
-    Guid ServiceId
+    Guid ServiceId,
+    DateTime EstimatedDate,
+    RequestStatus Status
     ) : IRequest<CreateServiceOrderResponse>;

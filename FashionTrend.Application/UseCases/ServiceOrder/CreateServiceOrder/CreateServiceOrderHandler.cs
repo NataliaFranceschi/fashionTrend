@@ -7,8 +7,9 @@ public class CreateServiceOrderHandler : IRequestHandler<CreateServiceOrderReque
     private readonly IServiceOrderRepository _serviceOrderRepository;
     private readonly IMapper _mapper;
 
-    public CreateServiceOrderHandler(IUnitOfWork unitOfWork, IServiceOrderRepository serviceOrderRepository,
-        IMapper mapper)
+    public CreateServiceOrderHandler(IUnitOfWork unitOfWork, 
+                                    IServiceOrderRepository serviceOrderRepository,
+                                    IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _serviceOrderRepository = serviceOrderRepository;

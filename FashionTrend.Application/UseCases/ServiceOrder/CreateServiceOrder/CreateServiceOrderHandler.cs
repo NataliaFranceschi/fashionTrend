@@ -6,19 +6,42 @@ public class CreateServiceOrderHandler : IRequestHandler<CreateServiceOrderReque
     private readonly IUnitOfWork _unitOfWork;
     private readonly IServiceOrderRepository _serviceOrderRepository;
     private readonly IMapper _mapper;
+    private readonly IServiceRepository _serviceRepository;
+    private readonly ISupplierRepository _supplierRepository;
+    private readonly IProductRepository _productRepository;
 
     public CreateServiceOrderHandler(IUnitOfWork unitOfWork, 
                                     IServiceOrderRepository serviceOrderRepository,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    IServiceRepository serviceRepository,
+                                    ISupplierRepository supplierRepository,
+                                    IProductRepository productRepository)
     {
         _unitOfWork = unitOfWork;
         _serviceOrderRepository = serviceOrderRepository;
         _mapper = mapper;
+        _serviceRepository = serviceRepository;
+        _supplierRepository = supplierRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<CreateServiceOrderResponse> Handle(CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
         var serviceOrder = _mapper.Map<ServiceOrder>(request);
+
+        var service = await _serviceRepository.Get(request.ServiceId, cancellationToken);
+        var supplier = await _supplierRepository.Get(request.SupplierId, cancellationToken);
+        var product = await _productRepository.Get(service.ProductId, cancellationToken);
+
+        var now = DateTime.Now;
+        serviceOrder.EstimatedDate = now.AddDays(service.ServiceDays);
+
+        bool haveSewingMachine = service.SewingMachines
+            .All(item => supplier.SewingMachines.Contains(item));
+        bool usesMaterial = product.Materials
+            .All(item => supplier.Materials.Contains(item));
+
+        if (!haveSewingMachine || !usesMaterial) { serviceOrder.Status = RequestStatus.Rejected; }
 
         _serviceOrderRepository.Create(serviceOrder);
 

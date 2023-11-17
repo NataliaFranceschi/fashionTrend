@@ -1,5 +1,5 @@
 ﻿public enum RequestType
 {
-    Repair,
+    Repair = 1,
     Manufactoring
 }

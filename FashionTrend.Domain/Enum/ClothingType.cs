@@ -1,6 +1,6 @@
 ﻿public enum ClothingType
 {
-    Camisa,
+    Camisa = 1,
     Calca,
     Vestido,
     Blusa,

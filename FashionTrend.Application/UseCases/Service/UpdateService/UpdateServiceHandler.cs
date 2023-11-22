@@ -17,22 +17,26 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceRequest, Update
 
     public async Task<UpdateServiceResponse> Handle(UpdateServiceRequest command, CancellationToken cancellationToken)
     {
-        var service = await _serviceRepository.Get(command.Id, cancellationToken);
+        try
+        {
+            var service = await _serviceRepository.Get(command.Id, cancellationToken);
 
-        if (service is null) return default;
+            if (service is null) { throw new ArgumentException("Service not found");}
 
-        service.Description = command.Description;
-        service.Type = command.Type;
-        service.ProductId = command.ProductId;
-        service.SewingMachines = command.SewingMachines;
-        service.Quantity = command.Quantity;
-        service.UnitPrice = command.UnitPrice;
-        service.ServiceDays = command.ServiceDays;
+                service.Description = command.Description;
+            service.Type = command.Type;
+            service.ProductId = command.ProductId;
+            service.SewingMachines = command.SewingMachines;
+            service.Quantity = command.Quantity;
+            service.UnitPrice = command.UnitPrice;
+            service.ServiceDays = command.ServiceDays;
 
-        _serviceRepository.Update(service);
+            _serviceRepository.Update(service);
 
-        await _unitOfWork.Commit(cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
-        return _mapper.Map<UpdateServiceResponse>(service);
+            return _mapper.Map<UpdateServiceResponse>(service);
+
+        } catch (Exception) { throw; }
     }
 }

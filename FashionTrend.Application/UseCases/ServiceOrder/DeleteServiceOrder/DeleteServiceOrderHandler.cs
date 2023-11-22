@@ -19,14 +19,17 @@ public sealed class DeleteServiceOrderHandler : IRequestHandler<DeleteServiceOrd
     public async Task<DeleteServiceOrderResponse> Handle(DeleteServiceOrderRequest request,
                                                  CancellationToken cancellationToken)
     {
+        try
+        {
+            var serviceOrder = await _serviceOrderRepository.Get(request.Id, cancellationToken);
 
-        var serviceOrder = await _serviceOrderRepository.Get(request.Id, cancellationToken);
+            if (serviceOrder == null) { throw new ArgumentException("Service Order not found"); }
 
-        if (serviceOrder == null) return default;
+            _serviceOrderRepository.Delete(serviceOrder);
+            await _unitOfWork.Commit(cancellationToken);
 
-        _serviceOrderRepository.Delete(serviceOrder);
-        await _unitOfWork.Commit(cancellationToken);
-
-        return _mapper.Map<DeleteServiceOrderResponse>(serviceOrder);
+            return _mapper.Map<DeleteServiceOrderResponse>(serviceOrder);
+        
+        } catch (Exception) { throw; }
     }
 }

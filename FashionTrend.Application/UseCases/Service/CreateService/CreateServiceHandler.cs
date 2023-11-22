@@ -6,22 +6,32 @@ public class CreateServiceHandler : IRequestHandler<CreateServiceRequest, Create
     private readonly IUnitOfWork _unitOfWork;
     private readonly IServiceRepository _serviceRepository;
     private readonly IMapper _mapper;
+    private readonly IProductRepository _productRepository;
 
     public CreateServiceHandler(IUnitOfWork unitOfWork, IServiceRepository serviceRepository,
-        IMapper mapper)
+        IProductRepository productRepository, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _serviceRepository = serviceRepository;
         _mapper = mapper;
+        _productRepository = productRepository;
     }
 
     public async Task<CreateServiceResponse> Handle(CreateServiceRequest request, CancellationToken cancellationToken)
     {
-        var service = _mapper.Map<Service>(request);
+        try
+        {
+            var service = _mapper.Map<Service>(request);
 
-        _serviceRepository.Create(service);
+            var product = await _productRepository.Get(service.Id, cancellationToken);
 
-        await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<CreateServiceResponse>(service);
+            if (product is null) { throw new ArgumentException("Product not found"); }
+
+            _serviceRepository.Create(service);
+
+            await _unitOfWork.Commit(cancellationToken);
+            return _mapper.Map<CreateServiceResponse>(service);
+
+        } catch (Exception) { throw; }
     }
 }

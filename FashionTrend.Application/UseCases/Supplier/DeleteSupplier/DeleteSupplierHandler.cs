@@ -19,14 +19,17 @@ public sealed class DeleteSupplierHandler : IRequestHandler<DeleteSupplierReques
     public async Task<DeleteSupplierResponse> Handle(DeleteSupplierRequest request,
                                                  CancellationToken cancellationToken)
     {
+        try
+        {
+            var supplier = await _supplierRepository.Get(request.Id, cancellationToken);
 
-        var supplier = await _supplierRepository.Get(request.Id, cancellationToken);
+            if (supplier == null) { throw new ArgumentException("Supplier not found"); }
 
-        if (supplier == null) return default;
+            _supplierRepository.Delete(supplier);
+            await _unitOfWork.Commit(cancellationToken);
 
-        _supplierRepository.Delete(supplier);
-        await _unitOfWork.Commit(cancellationToken);
-
-        return _mapper.Map<DeleteSupplierResponse>(supplier);
+            return _mapper.Map<DeleteSupplierResponse>(supplier);
+        
+        } catch (Exception) { throw; }
     }
 }

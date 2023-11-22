@@ -17,19 +17,22 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Update
 
     public async Task<UpdateProductResponse> Handle(UpdateProductRequest command, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.Get(command.Id, cancellationToken);
+        try { 
+            var product = await _productRepository.Get(command.Id, cancellationToken);
 
-        if (product is null) return default;
+            if (product is null) { throw new ArgumentException("Product not found"); }
 
-        product.Name = command.Name;
-        product.Description = command.Description;
-        product.ClothingType = command.ClothingType;
-        product.Materials = command.Materials;
+            product.Name = command.Name;
+            product.Description = command.Description;
+            product.ClothingType = command.ClothingType;
+            product.Materials = command.Materials;
 
-        _productRepository.Update(product);
+            _productRepository.Update(product);
 
-        await _unitOfWork.Commit(cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
-        return _mapper.Map<UpdateProductResponse>(product);
+            return _mapper.Map<UpdateProductResponse>(product);
+
+        } catch (Exception) { throw; }
     }
 }

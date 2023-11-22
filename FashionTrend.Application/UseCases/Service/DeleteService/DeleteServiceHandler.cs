@@ -19,14 +19,17 @@ public sealed class DeleteServiceHandler : IRequestHandler<DeleteServiceRequest,
     public async Task<DeleteServiceResponse> Handle(DeleteServiceRequest request,
                                                  CancellationToken cancellationToken)
     {
+        try
+        {
+            var service = await _serviceRepository.Get(request.Id, cancellationToken);
 
-        var service = await _serviceRepository.Get(request.Id, cancellationToken);
+            if (service == null) { throw new ArgumentException("Service not found"); }
 
-        if (service == null) return default;
+            _serviceRepository.Delete(service);
+            await _unitOfWork.Commit(cancellationToken);
 
-        _serviceRepository.Delete(service);
-        await _unitOfWork.Commit(cancellationToken);
+            return _mapper.Map<DeleteServiceResponse>(service);
 
-        return _mapper.Map<DeleteServiceResponse>(service);
+        } catch (Exception) { throw; }
     }
 }

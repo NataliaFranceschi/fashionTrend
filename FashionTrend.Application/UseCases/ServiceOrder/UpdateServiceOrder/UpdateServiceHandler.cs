@@ -17,18 +17,22 @@ public class UpdateServiceOrderHandler : IRequestHandler<UpdateServiceOrderReque
 
     public async Task<UpdateServiceOrderResponse> Handle(UpdateServiceOrderRequest command, CancellationToken cancellationToken)
     {
-        var serviceOrder = await _serviceOrderRepository.Get(command.Id, cancellationToken);
+        try
+        {
+            var serviceOrder = await _serviceOrderRepository.Get(command.Id, cancellationToken);
 
-        if (serviceOrder is null) return default;
+            if (serviceOrder is null) { throw new ArgumentException("Service Order not found"); }
 
-        serviceOrder.Payed = command.Payed;
+            serviceOrder.Payed = command.Payed;
 
-        serviceOrder.Status = command.Status;
+            serviceOrder.Status = command.Status;
 
-        _serviceOrderRepository.Update(serviceOrder);
+            _serviceOrderRepository.Update(serviceOrder);
 
-        await _unitOfWork.Commit(cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
-        return _mapper.Map<UpdateServiceOrderResponse>(serviceOrder);
+            return _mapper.Map<UpdateServiceOrderResponse>(serviceOrder);
+
+        } catch (Exception) { throw; }
     }
 }

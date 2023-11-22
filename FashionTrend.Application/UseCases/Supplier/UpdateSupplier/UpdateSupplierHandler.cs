@@ -17,20 +17,24 @@ public class UpdateSupplierHandler : IRequestHandler<UpdateSupplierRequest, Upda
 
     public async Task<UpdateSupplierResponse> Handle(UpdateSupplierRequest command, CancellationToken cancellationToken)
     {
-        var supplier = await _supplierRepository.Get(command.Id, cancellationToken);
+        try
+        {
+            var supplier = await _supplierRepository.Get(command.Id, cancellationToken);
 
-        if (supplier is null) return default;
+            if (supplier is null) { throw new ArgumentException("Supplier not found"); }
 
-        supplier.Name = command.Name;
-        supplier.Email = command.Email;
-        supplier.Password = command.Password;
-        supplier.SewingMachines = command.SewingMachines;
-        supplier.Materials = command.Materials;
+            supplier.Name = command.Name;
+            supplier.Email = command.Email;
+            supplier.Password = command.Password;
+            supplier.SewingMachines = command.SewingMachines;
+            supplier.Materials = command.Materials;
 
-        _supplierRepository.Update(supplier);
+            _supplierRepository.Update(supplier);
 
-        await _unitOfWork.Commit(cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
-        return _mapper.Map<UpdateSupplierResponse>(supplier);
+            return _mapper.Map<UpdateSupplierResponse>(supplier);
+
+        } catch (Exception) { throw; }
     }
 }

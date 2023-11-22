@@ -19,14 +19,17 @@ public sealed class DeleteProductHandler : IRequestHandler<DeleteProductRequest,
     public async Task<DeleteProductResponse> Handle(DeleteProductRequest request,
                                                  CancellationToken cancellationToken)
     {
+        try
+        {
+            var product = await _productRepository.Get(request.Id, cancellationToken);
 
-        var product = await _productRepository.Get(request.Id, cancellationToken);
+            if (product is null) { throw new ArgumentException("Product not found"); }
 
-        if (product == null) return default;
+            _productRepository.Delete(product);
+            await _unitOfWork.Commit(cancellationToken);
 
-        _productRepository.Delete(product);
-        await _unitOfWork.Commit(cancellationToken);
+            return _mapper.Map<DeleteProductResponse>(product);
 
-        return _mapper.Map<DeleteProductResponse>(product);
+        } catch (Exception) {throw; }
     }
 }

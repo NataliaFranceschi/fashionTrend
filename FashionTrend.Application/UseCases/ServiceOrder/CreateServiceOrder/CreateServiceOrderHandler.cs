@@ -27,25 +27,32 @@ public class CreateServiceOrderHandler : IRequestHandler<CreateServiceOrderReque
 
     public async Task<CreateServiceOrderResponse> Handle(CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        var serviceOrder = _mapper.Map<ServiceOrder>(request);
+        try
+        {
+            var serviceOrder = _mapper.Map<ServiceOrder>(request);
 
-        var service = await _serviceRepository.Get(request.ServiceId, cancellationToken);
-        var supplier = await _supplierRepository.Get(request.SupplierId, cancellationToken);
-        var product = await _productRepository.Get(service.ProductId, cancellationToken);
+            var service = await _serviceRepository.Get(request.ServiceId, cancellationToken);
+            var supplier = await _supplierRepository.Get(request.SupplierId, cancellationToken);
+            var product = await _productRepository.Get(service.ProductId, cancellationToken);
 
-        var now = DateTime.Now;
-        serviceOrder.EstimatedDate = now.AddDays(service.ServiceDays);
+            if (service == null) { throw new ArgumentException("Service not found"); }
+            if (supplier == null) { throw new ArgumentException("Supplier not found"); }
+            
+            var now = DateTime.Now;
+            serviceOrder.EstimatedDate = now.AddDays(service.ServiceDays);
 
-        bool haveSewingMachine = service.SewingMachines
-            .All(item => supplier.SewingMachines.Contains(item));
-        bool usesMaterial = product.Materials
-            .All(item => supplier.Materials.Contains(item));
+            bool haveSewingMachine = service.SewingMachines
+                .All(item => supplier.SewingMachines.Contains(item));
+            bool usesMaterial = product.Materials
+                .All(item => supplier.Materials.Contains(item));
 
-        if (!haveSewingMachine || !usesMaterial) { serviceOrder.Status = RequestStatus.Rejected; }
+            if (!haveSewingMachine || !usesMaterial) { serviceOrder.Status = RequestStatus.Rejected; }
 
-        _serviceOrderRepository.Create(serviceOrder);
+            _serviceOrderRepository.Create(serviceOrder);
 
-        await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<CreateServiceOrderResponse>(serviceOrder);
+            await _unitOfWork.Commit(cancellationToken);
+            return _mapper.Map<CreateServiceOrderResponse>(serviceOrder);
+
+        } catch (Exception) { throw; }
     }
 }

@@ -38,6 +38,18 @@ public class ProductController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<GetProductByIdResponse>> Get(Guid? id, CancellationToken cancellationToken)
+    {
+        if (id is null) { return BadRequest(); }
+
+        var request = new GetProductByIdRequest(id.Value);
+        var response = await _mediator.Send(request, cancellationToken);
+
+        if (response is null) { return NotFound(); }
+        return Ok(response);
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid? id, CancellationToken cancellationToken)
     {

@@ -15,7 +15,7 @@ public sealed class GetAllServiceOrderHandler : IRequestHandler<GetAllServiceOrd
 
     public async Task<List<GetAllServiceOrderResponse>> Handle(GetAllServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        var serviceOrder = await _serviceOrderRepository.GetAll(cancellationToken);
-        return _mapper.Map<List<GetAllServiceOrderResponse>>(serviceOrder);
+        var serviceOrders = await _serviceOrderRepository.GetAll(cancellationToken);
+        return _mapper.Map<List<GetAllServiceOrderResponse>>(serviceOrders);
     }
 }

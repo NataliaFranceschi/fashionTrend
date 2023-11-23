@@ -15,7 +15,7 @@ public sealed class GetAllServiceHandler : IRequestHandler<GetAllServiceRequest,
 
     public async Task<List<GetAllServiceResponse>> Handle(GetAllServiceRequest request, CancellationToken cancellationToken)
     {
-        var service = await _serviceRepository.GetAll(cancellationToken);
-        return _mapper.Map<List<GetAllServiceResponse>>(service);
+        var services = await _serviceRepository.GetAll(cancellationToken);
+        return _mapper.Map<List<GetAllServiceResponse>>(services);
     }
 }

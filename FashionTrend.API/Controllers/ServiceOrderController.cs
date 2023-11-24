@@ -50,6 +50,14 @@ public class ServiceOrderController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("supplier/{SupplierId}")]
+    public async Task<ActionResult<List<GetServiceOrderBySupplierResponse>>> 
+        GetBySupplier(Guid SupplierId, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetServiceOrderBySupplierRequest(SupplierId), cancellationToken);
+        return Ok(response);
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid? id, CancellationToken cancellationToken)
     {

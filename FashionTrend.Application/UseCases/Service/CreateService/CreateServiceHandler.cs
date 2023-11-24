@@ -23,7 +23,7 @@ public class CreateServiceHandler : IRequestHandler<CreateServiceRequest, Create
         {
             var service = _mapper.Map<Service>(request);
 
-            var product = await _productRepository.Get(service.Id, cancellationToken);
+            var product = await _productRepository.Get(service.ProductId, cancellationToken);
 
             if (product is null) { throw new ArgumentException("Product not found"); }
 

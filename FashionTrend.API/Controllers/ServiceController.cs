@@ -50,6 +50,17 @@ public class ServiceController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("type/{type}")]
+    public async Task<ActionResult<GetServiceByTypeResponse>> GetByType(RequestType? type, CancellationToken cancellationToken)
+    {
+        if (type is null) { return BadRequest(); }
+
+        var request = new GetServiceByTypeRequest(type.Value);
+        var response = await _mediator.Send(request, cancellationToken);
+
+        return Ok(response);
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid? id, CancellationToken cancellationToken)
     {

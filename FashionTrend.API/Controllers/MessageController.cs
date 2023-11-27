@@ -3,11 +3,11 @@ using MediatR;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MessageControler : ControllerBase 
+public class MessageController : ControllerBase 
 {
     IMediator _mediator;
 
-    public MessageControler(IMediator mediator)
+    public MessageController(IMediator mediator)
     {
         _mediator = mediator;
     }

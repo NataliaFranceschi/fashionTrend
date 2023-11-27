@@ -3,17 +3,17 @@ using MediatR;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MessageController : ControllerBase 
+public class ConsumerController : ControllerBase
 {
     IMediator _mediator;
 
-    public MessageController(IMediator mediator)
+    public ConsumerController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateMessageRequest request)
+    public async Task<IActionResult> Create(ConsumerMessageRequest request)
     {
         var message = await _mediator.Send(request);
         return Ok(message);

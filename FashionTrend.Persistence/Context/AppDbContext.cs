@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
     public DbSet<Service> Services { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ServiceOrder> ServiceOrders { get; set; }
+    public DbSet<DraftContract> DraftContracts { get; set; }
+    public DbSet<Contract> Contracts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

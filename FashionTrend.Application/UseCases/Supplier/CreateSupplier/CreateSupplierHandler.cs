@@ -18,6 +18,7 @@ public class CreateSupplierHandler : IRequestHandler<CreateSupplierRequest, Crea
     public async Task<CreateSupplierResponse> Handle(CreateSupplierRequest request, CancellationToken cancellationToken)
     {
         var supplier = _mapper.Map<Supplier>(request);
+        supplier.PhoneNumber = "+55" + request.PhoneNumber;
 
         _supplierRepository.Create(supplier);
 

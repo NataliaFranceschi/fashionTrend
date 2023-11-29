@@ -28,6 +28,7 @@ public class UpdateSupplierHandler : IRequestHandler<UpdateSupplierRequest, Upda
             supplier.Password = command.Password;
             supplier.SewingMachines = command.SewingMachines;
             supplier.Materials = command.Materials;
+            supplier.PhoneNumber = "+55" + command.PhoneNumber;
 
             _supplierRepository.Update(supplier);
 

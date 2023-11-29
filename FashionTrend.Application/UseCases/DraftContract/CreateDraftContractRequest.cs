@@ -1,4 +1,4 @@
 ﻿using MediatR;
 
-public sealed record CreateDraftContractRequest(Supplier User, string Description)
+public sealed record CreateDraftContractRequest(Guid SupplierId, string Description)
     : IRequest<CreateDraftContractResponse>;

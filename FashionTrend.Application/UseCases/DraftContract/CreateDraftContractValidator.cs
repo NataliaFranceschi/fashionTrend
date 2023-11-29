@@ -5,6 +5,6 @@ public sealed class CreateDraftContractValidator : AbstractValidator<CreateDraft
     public CreateDraftContractValidator()
     {
         RuleFor(x => x.Description).NotEmpty();
-        RuleFor(x => x.User).NotEmpty();
+        RuleFor(x => x.SupplierId).NotEmpty();
     }
 }

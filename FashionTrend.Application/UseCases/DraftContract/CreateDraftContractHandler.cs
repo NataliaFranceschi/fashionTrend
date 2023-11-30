@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-
+using Microsoft.Extensions.Configuration;
 
 public class CreateDraftContractHandle : IRequestHandler<CreateDraftContractRequest, CreateDraftContractResponse>
 {
@@ -8,20 +8,23 @@ public class CreateDraftContractHandle : IRequestHandler<CreateDraftContractRequ
     private readonly IDraftContractRepository _repository;
     private readonly IMapper _mapper;
     private readonly ISupplierRepository _supplierRepository;
-    public CreateDraftContractHandle(IUnitOfWork unitOfWork, 
-                                    IDraftContractRepository draftContract, 
+    private readonly IConfiguration _configuration;
+    public CreateDraftContractHandle(IUnitOfWork unitOfWork,
+                                    IDraftContractRepository draftContract,
                                     IMapper mapper,
-                                    ISupplierRepository supplierRepository)
+                                    ISupplierRepository supplierRepository,
+                                    IConfiguration configuration)
     {
         _mapper = mapper;
         _repository = draftContract;
         _unitOfWork = unitOfWork;
         _supplierRepository = supplierRepository;
-
+        _configuration = configuration;
     }
 
     public async Task<CreateDraftContractResponse> Handle(CreateDraftContractRequest request, CancellationToken cancellationToken)
     {
+
         var supplier = await _supplierRepository.Get(request.SupplierId, cancellationToken);
         if (supplier == null) { throw new ArgumentException("Supplier not found"); }
 
@@ -30,10 +33,17 @@ public class CreateDraftContractHandle : IRequestHandler<CreateDraftContractRequ
 
         await _unitOfWork.Commit(cancellationToken);
 
-        var notificaton = new CreateNotificationHandler("AC705875abfac3bd8ffe96712d2184af3f",
-            "754eb0223d1b2e287f97a26dc12d4743", "+14842763066");
+        var builder = new ConfigurationBuilder()
+          .AddUserSecrets<CreateNotificationHandler>();
+        var userSecretsConfiguration = builder.Build();
 
-        notificaton.SendSMS(supplier.PhoneNumber, "Olá, temos uma minuta de contrato disponível para assinatura");
+        var accountSid = userSecretsConfiguration["Twilio:AccountsID"];
+        var authToken = userSecretsConfiguration["Twilio:AuthToken"];
+        var twilioPhoneNumber = userSecretsConfiguration["Twilio:TwilioPhoneNumber"];
+
+        var notification = new CreateNotificationHandler(accountSid, authToken, twilioPhoneNumber);
+
+        notification.SendSMS(supplier.PhoneNumber, "Olá, temos uma minuta de contrato disponível para assinatura");
 
         return _mapper.Map<CreateDraftContractResponse>(draft);
 

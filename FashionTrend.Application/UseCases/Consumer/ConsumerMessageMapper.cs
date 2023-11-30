@@ -3,6 +3,6 @@ public class ConsumerMessageMapper : Profile
 {
     public ConsumerMessageMapper()
     {
-        CreateMap<ConsumerMessageRequest, Message>();
+        CreateMap<ConsumerMessageRequest, MessageReceivedEventArgs>();
     }
 }

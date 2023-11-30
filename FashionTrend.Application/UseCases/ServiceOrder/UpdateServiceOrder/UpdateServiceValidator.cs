@@ -5,7 +5,6 @@ public class UpdateServiceOrderValidator : AbstractValidator<UpdateServiceOrderR
 {
     public UpdateServiceOrderValidator()
     {
-        RuleFor(x => x.Payed).NotEmpty();
         RuleFor(x => x.Status).NotEmpty();
     }
 }

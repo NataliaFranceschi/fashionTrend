@@ -23,9 +23,8 @@ public class UpdateServiceOrderHandler : IRequestHandler<UpdateServiceOrderReque
 
             if (serviceOrder is null) { throw new ArgumentException("Service Order not found"); }
 
-            serviceOrder.Payed = command.Payed;
-
             serviceOrder.Status = command.Status;
+            if (serviceOrder.Status == RequestStatus.Completed) { serviceOrder.Payed = true; }
 
             _serviceOrderRepository.Update(serviceOrder);
 

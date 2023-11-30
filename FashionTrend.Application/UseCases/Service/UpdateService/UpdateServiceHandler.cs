@@ -6,13 +6,15 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceRequest, Update
     private readonly IUnitOfWork _unitOfWork;
     private readonly IServiceRepository _serviceRepository;
     private readonly IMapper _mapper;
+    private readonly IProductRepository _productRepository;
 
     public UpdateServiceHandler(IUnitOfWork unitOfWork, IServiceRepository serviceRepository,
-        IMapper mapper)
+        IMapper mapper, IProductRepository productRepository)
     {
         _unitOfWork = unitOfWork;
         _serviceRepository = serviceRepository;
         _mapper = mapper;
+        _productRepository = productRepository;
     }
 
     public async Task<UpdateServiceResponse> Handle(UpdateServiceRequest command, CancellationToken cancellationToken)
@@ -20,10 +22,12 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceRequest, Update
         try
         {
             var service = await _serviceRepository.Get(command.Id, cancellationToken);
-
             if (service is null) { throw new ArgumentException("Service not found");}
 
-                service.Description = command.Description;
+            var product = await _productRepository.Get(service.ProductId, cancellationToken);
+            if (product is null) { throw new ArgumentException("Product not found"); }
+
+            service.Description = command.Description;
             service.Type = command.Type;
             service.ProductId = command.ProductId;
             service.SewingMachines = command.SewingMachines;
